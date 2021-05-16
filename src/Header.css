@@ -5,3 +5,10 @@ a{
 a:hover{
   color:darkgrey;
 }
+
+Navbar{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+}
