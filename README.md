@@ -1,11 +1,22 @@
-# Start your own "Can of Books" App
+# BookApp
+[Website demo](https://elastic-tesla-cf5ae5.netlify.app/)
 
-This repository has starter code to begin work on creating your own online bookshelf.
+**Author**: Abeer AlRafati & Ahmad Ammora
+**Version**: 1.0.3 
 
-## What can books do?
+## Overview
+A book website , you can save your books in your profile after login 
 
-Books are life-changing. They have the power to enlighten, educate, entertain, heal, and help us grow. Build out this code base to create an web app to track what books have impacted you, and what's recommended to read next.
+## Getting Started
 
-## Use this template
+login > show your books and inforamtion
 
-Clone this repo to your own account with the green "Use this template" button. Then, add any collaborators. Now you are ready to start adding features! Deploy your site to let the world know which books have had the greatest impact on you, and what's recommended. Enjoy!
+## Architecture
+
+build with ReactJS, auth0 Arorayzation
+## Change Log
+
+16-5-2021 build login / logout functions
+
+## Credit and Collaborations
+[Auth0 website](https://manage.auth0.com/dashboard/eu/dev-cqm7eiho/)
