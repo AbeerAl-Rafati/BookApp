@@ -8,7 +8,7 @@ import {
   Switch,
   Route
 } from "react-router-dom";
-import LoginButton from './LoginButton';
+// import LoginButton from './LoginButton';
 import MyFavoriteBooks from './BestBooks';
 import Profile from './Profile';
 
