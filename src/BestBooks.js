@@ -13,9 +13,13 @@ class MyFavoriteBooks extends React.Component {
 
     }
   }
+  // renderBook = () => {
+  //   const { isAuthenticated } = this.props.auth0;
 
+  //   isAuthenticated && this.componentDidMount();
+  // }
 
-  getUserBooks = async () => {
+  componentDidMount = async () => {
     const { user } = this.props.auth0;
 
     try {
@@ -25,6 +29,7 @@ class MyFavoriteBooks extends React.Component {
 
       this.setState({
         books: books.data[0].books,
+
       });
 
     } catch (error) {
@@ -34,19 +39,26 @@ class MyFavoriteBooks extends React.Component {
 
   render() {
     const { isAuthenticated } = this.props.auth0;
+
     return (<>{isAuthenticated &&
       <Jumbotron>
         <h1>My Favorite Books</h1>
         <p>
           This is a collection of my favorite books
         </p>
+
+      </Jumbotron>}
+      <>
+        {/* {this.componentDidMount}
+        console.log(this.state.books); */}
         {this.state.books.map((book, i) =>
           <div key={i}>
             <p>Book name: {book.name}</p>
             <p>Book status: {book.status}</p>
             <p>Book description: {book.description}</p>
           </div>)}
-      </Jumbotron>}</>
+      </>
+    </>
     );
   }
 }
