@@ -23,8 +23,9 @@ class MyFavoriteBooks extends React.Component {
     const { user } = this.props.auth0;
 
     try {
-      const books = await axios.get(`${process.env.REACT_APP_SERVER}/books?email=${user.email}`);
 
+      // console.log(process.env.REACT_APP_PORT)
+      const books = await axios.get(`http://localhost:3001/books?Email=${user.email}`);
 
 
       this.setState({
@@ -38,6 +39,20 @@ class MyFavoriteBooks extends React.Component {
   }
 
   render() {
+
+    const bookList = this.state.books.map((book, i) =>{
+
+      return (
+        <div key={i}>
+          <p>Book name: {book.name}</p>
+          <p>Book status: {book.status}</p>
+          <p>Book description: {book.description}</p>
+        </div>
+      )
+    });
+
+
+
     const { isAuthenticated } = this.props.auth0;
 
     return (<>{isAuthenticated &&
@@ -46,18 +61,8 @@ class MyFavoriteBooks extends React.Component {
         <p>
           This is a collection of my favorite books
         </p>
-
+        {bookList}
       </Jumbotron>}
-      <>
-        {/* {this.componentDidMount}
-        console.log(this.state.books); */}
-        {this.state.books.map((book, i) =>
-          <div key={i}>
-            <p>Book name: {book.name}</p>
-            <p>Book status: {book.status}</p>
-            <p>Book description: {book.description}</p>
-          </div>)}
-      </>
     </>
     );
   }
