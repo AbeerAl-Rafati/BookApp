@@ -27,7 +27,7 @@ class MyFavoriteBooks extends React.Component {
     const { user } = this.props.auth0;
 
     try {
-
+      console.log(user.email)
       // console.log(process.env.REACT_APP_PORT)
       const books = await axios.get(`http://localhost:3001/books?Email=${user.email}`);
 
@@ -42,19 +42,33 @@ class MyFavoriteBooks extends React.Component {
     }
   }
 
+  deleteBook = async (index) => {
+    const { user } = this.props.auth0;
+    const newArrayOfBooks = this.state.books.filter((book, i) => {
+      return i !== index;
+    });
+
+    this.setState({ books: newArrayOfBooks });
+    console.log(newArrayOfBooks);
+    console.log(user.email.indexOf(index));
+
+    await axios.delete(`http://localhost:3001/books/${index}?Email=${user.email}`)
+  }
+
+
+
   render() {
 
     const bookList = this.state.books.map((book, i) => {
-
       return (
-        <Container fluid>
+        <Container key={i} fluid>
           <Row className='justify-content-md-center'>
-            <Card key={i} border="info" style={{ width: '20rem', margin: '0.5rem' }}>
+            <Card border="info" style={{ width: '20rem', margin: '0.5rem' }}>
               <Card.Body>
                 <Card.Title>{book.name}</Card.Title>
                 <Card.Text>{book.description}</Card.Text>
                 <Card.Footer>{book.status}</Card.Footer>
-                <Button variant="danger">Delete the Book</Button>
+                <Button onClick={(e) => this.deleteBook(i)} variant="danger">Delete the Book</Button>
               </Card.Body >
             </Card >
           </Row>
@@ -62,7 +76,7 @@ class MyFavoriteBooks extends React.Component {
       )
     });
 
-
+    console.log(this.state.books)
 
     const { isAuthenticated } = this.props.auth0;
 
