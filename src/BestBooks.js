@@ -4,6 +4,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import './BestBooks.css';
 import axios from 'axios';
+import Card from 'react-bootstrap/Card';
+import Button from 'react-bootstrap/Button';
+import Row from 'react-bootstrap/Row';
+import Container from 'react-bootstrap/Container';
 
 class MyFavoriteBooks extends React.Component {
   constructor(props) {
@@ -40,14 +44,21 @@ class MyFavoriteBooks extends React.Component {
 
   render() {
 
-    const bookList = this.state.books.map((book, i) =>{
+    const bookList = this.state.books.map((book, i) => {
 
       return (
-        <div key={i}>
-          <p>Book name: {book.name}</p>
-          <p>Book status: {book.status}</p>
-          <p>Book description: {book.description}</p>
-        </div>
+        <Container fluid>
+          <Row className='justify-content-md-center'>
+            <Card key={i} border="info" style={{ width: '20rem', margin: '0.5rem' }}>
+              <Card.Body>
+                <Card.Title>{book.name}</Card.Title>
+                <Card.Text>{book.description}</Card.Text>
+                <Card.Footer>{book.status}</Card.Footer>
+                <Button variant="danger">Delete the Book</Button>
+              </Card.Body >
+            </Card >
+          </Row>
+        </Container >
       )
     });
 
