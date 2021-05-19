@@ -4,6 +4,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import './BestBooks.css';
 import axios from 'axios';
+import Card from 'react-bootstrap/Card';
+import Button from 'react-bootstrap/Button';
+import Row from 'react-bootstrap/Row';
+import Container from 'react-bootstrap/Container';
 
 class MyFavoriteBooks extends React.Component {
   constructor(props) {
@@ -23,7 +27,7 @@ class MyFavoriteBooks extends React.Component {
     const { user } = this.props.auth0;
 
     try {
-
+      console.log(user.email)
       // console.log(process.env.REACT_APP_PORT)
       const books = await axios.get(`http://localhost:3001/books?Email=${user.email}`);
 
@@ -38,20 +42,41 @@ class MyFavoriteBooks extends React.Component {
     }
   }
 
+  deleteBook = async (index) => {
+    const { user } = this.props.auth0;
+    const newArrayOfBooks = this.state.books.filter((book, i) => {
+      return i !== index;
+    });
+
+    this.setState({ books: newArrayOfBooks });
+    console.log(newArrayOfBooks);
+    console.log(user.email.indexOf(index));
+
+    await axios.delete(`http://localhost:3001/books/${index}?Email=${user.email}`)
+  }
+
+
+
   render() {
 
-    const bookList = this.state.books.map((book, i) =>{
-
+    const bookList = this.state.books.map((book, i) => {
       return (
-        <div key={i}>
-          <p>Book name: {book.name}</p>
-          <p>Book status: {book.status}</p>
-          <p>Book description: {book.description}</p>
-        </div>
+        <Container key={i} fluid>
+          <Row className='justify-content-md-center'>
+            <Card border="info" style={{ width: '20rem', margin: '0.5rem' }}>
+              <Card.Body>
+                <Card.Title>{book.name}</Card.Title>
+                <Card.Text>{book.description}</Card.Text>
+                <Card.Footer>{book.status}</Card.Footer>
+                <Button onClick={(e) => this.deleteBook(i)} variant="danger">Delete the Book</Button>
+              </Card.Body >
+            </Card >
+          </Row>
+        </Container >
       )
     });
 
-
+    console.log(this.state.books)
 
     const { isAuthenticated } = this.props.auth0;
 
