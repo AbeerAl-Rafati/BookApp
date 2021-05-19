@@ -1,6 +1,7 @@
 import React from 'react';
 import { withAuth0 } from '@auth0/auth0-react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import AddBookForm from './components/form'
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import './BestBooks.css';
 import axios from 'axios';
@@ -14,22 +15,45 @@ class MyFavoriteBooks extends React.Component {
     super(props);
     this.state = {
       books: [],
-
+      userData:this.props.auth0.user,
+      BookDescription:'',
+      BookName :'',
+      Bookstatus:''
     }
   }
-  // renderBook = () => {
-  //   const { isAuthenticated } = this.props.auth0;
+  handeleChanges = e => this.setState({[e.target.name]:e.target.value})
 
-  //   isAuthenticated && this.componentDidMount();
-  // }
+  handeleSubmit = async (e) =>{
+
+    e.preventDefault();
+
+    const bodyData ={
+      userEmail:this.state.userData.email,
+      BookName:this.state.BookName,
+      Bookstatus:this.state.Bookstatus,
+      BookDescription:this.state.BookDescription
+    }
+    
+    const newBook = await axios.post(`${process.env.REACT_APP_SERVER}/books`, bodyData);
+
+
+    this.setState({
+      books:newBook.data.books
+    })
+
+
+    // console.log(newBook.data.books)
+
+
+  }
 
   componentDidMount = async () => {
     const { user } = this.props.auth0;
 
     try {
-      console.log(user.email)
-      // console.log(process.env.REACT_APP_PORT)
-      const books = await axios.get(`http://localhost:3001/books?Email=${user.email}`);
+
+      
+      const books = await axios.get(`${process.env.REACT_APP_SERVER}/books?Email=${user.email}`);
 
 
       this.setState({
@@ -52,44 +76,61 @@ class MyFavoriteBooks extends React.Component {
     console.log(newArrayOfBooks);
     console.log(user.email.indexOf(index));
 
-    await axios.delete(`http://localhost:3001/books/${index}?Email=${user.email}`)
+    await axios.delete(`http://localhost:3001/books/${index}?email=${user.email}`)
   }
 
 
 
   render() {
 
-    const bookList = this.state.books.map((book, i) => {
-      return (
-        <Container key={i} fluid>
-          <Row className='justify-content-md-center'>
-            <Card border="info" style={{ width: '20rem', margin: '0.5rem' }}>
-              <Card.Body>
-                <Card.Title>{book.name}</Card.Title>
-                <Card.Text>{book.description}</Card.Text>
-                <Card.Footer>{book.status}</Card.Footer>
-                <Button onClick={(e) => this.deleteBook(i)} variant="danger">Delete the Book</Button>
-              </Card.Body >
-            </Card >
-          </Row>
-        </Container >
-      )
-    });
 
-    console.log(this.state.books)
+    try{
 
-    const { isAuthenticated } = this.props.auth0;
+      console.log(this.state.books)
 
-    return (<>{isAuthenticated &&
-      <Jumbotron>
-        <h1>My Favorite Books</h1>
-        <p>
-          This is a collection of my favorite books
-        </p>
-        {bookList}
-      </Jumbotron>}
-    </>
-    );
+      const bookList = this.state.books.map((book, i) => {
+  
+        console.log(this.state.books)
+        return (
+          <Container key={i} fluid>
+            <Row className='justify-content-md-center'>
+              <Card border="info" style={{ width: '20rem', margin: '0.5rem' }}>
+                <Card.Body>
+                  <Card.Title>{book.name}</Card.Title>
+                  <Card.Text>{book.description}</Card.Text>
+                  <Card.Footer>{book.status}</Card.Footer>
+                  <Button onClick={(e) => this.deleteBook(i)} variant="danger">Delete the Book</Button>
+                </Card.Body >
+              </Card >
+            </Row>
+          </Container >
+        )
+      });
+  
+      // console.log(this.state.books)
+  
+      const { isAuthenticated } = this.props.auth0;
+  
+      return (<>{isAuthenticated &&
+        <Jumbotron>
+          <AddBookForm 
+            handeleChanges={this.handeleChanges}
+            handeleSubmit={this.handeleSubmit}
+             />
+          <h1>My Favorite Books</h1>
+          <p>
+            This is a collection of my favorite books
+          </p>
+          {bookList}
+        </Jumbotron>}
+      </>
+      );
+
+    }catch (err){
+      console.log(err)
+    }
+
+
   }
 }
 
