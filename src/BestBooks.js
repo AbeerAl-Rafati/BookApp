@@ -34,11 +34,15 @@ class MyFavoriteBooks extends React.Component {
       BookDescription:this.state.BookDescription
     }
     
-    const newBook = await axios.post(`${process.env.REACT_APP_SERVER}/newBook`, bodyData);
+    const newBook = await axios.post(`${process.env.REACT_APP_SERVER}/books`, bodyData);
+
 
     this.setState({
-      books:newBook.data
+      books:newBook.data.books
     })
+
+
+    // console.log(newBook.data.books)
 
 
   }
@@ -72,48 +76,61 @@ class MyFavoriteBooks extends React.Component {
     console.log(newArrayOfBooks);
     console.log(user.email.indexOf(index));
 
-    await axios.delete(`http://localhost:3001/books/${index}?Email=${user.email}`)
+    await axios.delete(`http://localhost:3001/books/${index}?email=${user.email}`)
   }
 
 
 
   render() {
 
-    const bookList = this.state.books.map((book, i) => {
-      return (
-        <Container key={i} fluid>
-          <Row className='justify-content-md-center'>
-            <Card border="info" style={{ width: '20rem', margin: '0.5rem' }}>
-              <Card.Body>
-                <Card.Title>{book.name}</Card.Title>
-                <Card.Text>{book.description}</Card.Text>
-                <Card.Footer>{book.status}</Card.Footer>
-                <Button onClick={(e) => this.deleteBook(i)} variant="danger">Delete the Book</Button>
-              </Card.Body >
-            </Card >
-          </Row>
-        </Container >
-      )
-    });
 
-    console.log(this.state.books)
+    try{
 
-    const { isAuthenticated } = this.props.auth0;
+      console.log(this.state.books)
 
-    return (<>{isAuthenticated &&
-      <Jumbotron>
-        <AddBookForm 
-          handeleChanges={this.handeleChanges}
-          handeleSubmit={this.handeleSubmit}
-           />
-        <h1>My Favorite Books</h1>
-        <p>
-          This is a collection of my favorite books
-        </p>
-        {bookList}
-      </Jumbotron>}
-    </>
-    );
+      const bookList = this.state.books.map((book, i) => {
+  
+        console.log(this.state.books)
+        return (
+          <Container key={i} fluid>
+            <Row className='justify-content-md-center'>
+              <Card border="info" style={{ width: '20rem', margin: '0.5rem' }}>
+                <Card.Body>
+                  <Card.Title>{book.name}</Card.Title>
+                  <Card.Text>{book.description}</Card.Text>
+                  <Card.Footer>{book.status}</Card.Footer>
+                  <Button onClick={(e) => this.deleteBook(i)} variant="danger">Delete the Book</Button>
+                </Card.Body >
+              </Card >
+            </Row>
+          </Container >
+        )
+      });
+  
+      // console.log(this.state.books)
+  
+      const { isAuthenticated } = this.props.auth0;
+  
+      return (<>{isAuthenticated &&
+        <Jumbotron>
+          <AddBookForm 
+            handeleChanges={this.handeleChanges}
+            handeleSubmit={this.handeleSubmit}
+             />
+          <h1>My Favorite Books</h1>
+          <p>
+            This is a collection of my favorite books
+          </p>
+          {bookList}
+        </Jumbotron>}
+      </>
+      );
+
+    }catch (err){
+      console.log(err)
+    }
+
+
   }
 }
 
